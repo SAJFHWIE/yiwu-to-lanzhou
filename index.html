@@ -94,7 +94,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 <script>
 const map=L.map('map',{zoomControl:false}).setView([33,110],6);
 L.control.zoom({position:'topright'}).addTo(map);
-L.tileLayer('https://webst0{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',{attribution:'&copy; 高德地图',maxZoom:18,subdomains:'1234'}).addTo(map);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OSM & CartoDB',maxZoom:19,subdomains:'abcd'}).addTo(map);
+L.tileLayer('https://webst0{s}.is.autonavi.com/appmaptile?style=8&x={x}&y={y}&z={z}',{attribution:'&copy; 高德地图',maxZoom:18,subdomains:'1234',opacity:0.9}).addTo(map);
 
 function mi(e,s){return L.divIcon({html:`<span style="font-size:${s||14}px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.6))">${e}</span>`,className:'mi',iconSize:[(s||14)+6,(s||14)+6],iconAnchor:[(s||14)/2+3,(s||14)/2+3]})}
 const iC=mi('🏙',14),iCh=mi('⚡',13),iSc=mi('🏔',13),iCa=mi('⛺',12),iSt=mi('⭐',14),iMu=mi('🏛',14),iHm=mi('🏠',15),iTp=mi('🛕',13),iFd=mi('🍜',13);
