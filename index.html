@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>义乌→兰州 4天自驾路线</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;display:flex;height:100vh;overflow:hidden;background:#0a0a1a}
+#sidebar{width:320px;min-width:320px;height:100vh;overflow-y:auto;background:#0a0a1a;color:#ccc;border-right:1px solid #1e1e3a;z-index:1000;scrollbar-width:thin;scrollbar-color:#333 #0a0a1a}
+#sidebar::-webkit-scrollbar{width:5px}#sidebar::-webkit-scrollbar-track{background:#0a0a1a}#sidebar::-webkit-scrollbar-thumb{background:#333;border-radius:3px}
+.hdr{padding:14px;background:linear-gradient(135deg,#0a0a1a,#111a30);border-bottom:1px solid #1e1e3a;position:sticky;top:0;z-index:10}
+.hdr h1{font-size:14px;color:#fff;margin-bottom:2px}.hdr p{font-size:10px;color:#666}
+.sts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-top:6px}
+.st{padding:4px;border-radius:4px;background:#111;text-align:center}.st .n{font-size:13px;font-weight:700;color:#fff}.st .l{font-size:8px;color:#666}
+.ov{padding:4px 12px;background:#0d0d20;border-bottom:1px solid #151530;display:flex;align-items:center;justify-content:space-between;position:sticky;top:68px;z-index:9}
+.ov span{font-size:10px;color:#555}
+.ov button{padding:2px 8px;border-radius:8px;border:1px solid #333;background:transparent;color:#888;font-size:9px;cursor:pointer}.ov button:hover{color:#fff;border-color:#666}
+.sec{padding:5px 12px;border-bottom:1px solid #12122a}
+.sec h2{font-size:9px;font-weight:700;color:#888;margin-bottom:4px;display:flex;align-items:center;gap:4px;text-transform:uppercase;letter-spacing:.5px}
+.sec h2 .d{width:6px;height:6px;border-radius:50%;display:inline-block}
+.di{padding:4px 7px;margin-bottom:2px;border-radius:4px;background:#0e0e22;font-size:9px;line-height:1.3;cursor:pointer;transition:all .15s;border-left:2px solid transparent}
+.di:hover{background:#16163a;border-left-color:#60a5fa}.di.act{background:#1a1a40;border-left-color:#60a5fa;box-shadow:0 0 6px #60a5fa20}
+.di .dl{font-weight:700;color:#eee;font-size:9px}.di .dr{color:#555;font-size:8.5px}.di .dh{color:#60a5fa;font-size:8.5px}
+.lg{padding:8px 12px}.lg h3{font-size:9px;color:#666;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+.li{display:flex;align-items:center;gap:4px;margin-bottom:2px;font-size:8px;color:#777}
+.li .ll{width:14px;height:3px;border-radius:1px;flex-shrink:0}.li .ld{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+#map{flex:1;height:100vh}
+.mi{display:flex;align-items:center;justify-content:center;background:none;border:none}
+.cl{font-size:8px;color:#fff;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,.9),0 0 5px rgba(0,0,0,.7);white-space:nowrap}
+.pp{font-size:11px;line-height:1.5;max-width:180px}.pp strong{color:#1a73e8;font-size:12px}
+.detail-panel{position:absolute;bottom:0;left:320px;right:0;background:rgba(10,10,26,.95);border-top:1px solid #2a2a4a;z-index:999;max-height:40vh;overflow-y:auto;backdrop-filter:blur(8px);display:none}
+.detail-panel.show{display:block}
+.dp-header{padding:8px 14px;border-bottom:1px solid #1e1e3a;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:rgba(10,10,26,.98)}
+.dp-header h3{font-size:12px;color:#fff}
+.dp-nav{display:flex;gap:6px}
+.dp-nav button{padding:3px 10px;border-radius:8px;border:1px solid #333;background:transparent;color:#888;font-size:10px;cursor:pointer}.dp-nav button:hover{color:#fff;background:#222}
+.dp-stops{display:flex;overflow-x:auto;padding:8px 14px;gap:8px;scrollbar-width:none}
+.dp-stops::-webkit-scrollbar{display:none}
+.dp-stop{flex-shrink:0;padding:8px 12px;border-radius:8px;background:#16162e;cursor:pointer;transition:all .15s;min-width:160px;border:1px solid transparent}
+.dp-stop:hover{border-color:#60a5fa}.dp-stop.active{background:#1a1a40;border-color:#60a5fa}
+.dp-stop .sn{font-size:9px;font-weight:700;color:#60a5fa;margin-bottom:2px}
+.dp-stop .sname{font-size:11px;color:#fff;font-weight:600;margin-bottom:2px}
+.dp-stop .scat{font-size:9px;color:#888}
+.dp-stop .shours{font-size:9px;color:#666;margin-top:2px}
+.dp-stop .sdesc{font-size:9px;color:#aaa;margin-top:3px;line-height:1.4}
+.dp-info{padding:8px 14px;border-top:1px solid #1e1e3a}
+.dp-info-row{display:flex;gap:12px;margin-bottom:6px}
+.dp-info-section{flex:1}
+.dp-info-section h4{font-size:9px;color:#666;margin-bottom:3px;letter-spacing:.5px}
+.dp-info-item{font-size:10px;color:#ccc;margin-bottom:2px}.dp-info-item .iname{font-weight:600;color:#fff}.dp-info-item .idetail{color:#888;font-size:9px}
+@media(max-width:768px){#sidebar{width:100%;min-width:100%;height:40vh;border-right:none;border-bottom:1px solid #2a2a4a}body{flex-direction:column}#map{height:60vh}.detail-panel{left:0;max-height:35vh}}
+</style>
+</head>
+<body>
+<div id="sidebar">
+  <div class="hdr">
+    <h1>义乌 → 兰州 4天自驾</h1>
+    <p>约2,050km · 点击日期查看当天详细路线</p>
+    <div class="sts">
+      <div class="st"><div class="n">~2,050</div><div class="l">总里程km</div></div>
+      <div class="st"><div class="n">4</div><div class="l">总天数</div></div>
+      <div class="st"><div class="n">一人</div><div class="l">单车自驾</div></div>
+    </div>
+  </div>
+  <div class="ov"><span id="ovTxt">全程总览 · 点击日期查看详情</span><button onclick="resetView()" id="resetBtn" style="display:none">↩ 返回总览</button></div>
+  <div id="days"></div>
+  <div class="lg">
+    <h3>图例</h3>
+    <div class="li"><div class="ll" style="background:#3b82f6"></div>Day 1 义乌→南昌→武汉</div>
+    <div class="li"><div class="ll" style="background:#10b981"></div>Day 2 武汉→十堰(武当山)</div>
+    <div class="li"><div class="ll" style="background:#f59e0b"></div>Day 3 十堰→西安(穿越秦岭)</div>
+    <div class="li"><div class="ll" style="background:#ef4444"></div>Day 4 西安→兰州</div>
+    <div class="li"><div class="ld" style="background:#22c55e"></div>⚡ 充电站</div>
+    <div class="li"><div class="ld" style="background:#a855f7"></div> 景点/古迹</div>
+    <div class="li"><div class="ld" style="background:#eab308"></div> 美食</div>
+    <div class="li"><div class="ld" style="background:#3b82f6"></div>⛺ 露营地</div>
+  </div>
+</div>
+<div id="map"></div>
+<div class="detail-panel" id="detailPanel">
+  <div class="dp-header"><h3 id="dpTitle">Day 1</h3><div class="dp-nav"><button onclick="prevStop()">← 上一站</button><button onclick="nextStop()">下一站 →</button></div></div>
+  <div class="dp-stops" id="dpStops"></div>
+  <div class="dp-info">
+    <div class="dp-info-row">
+      <div class="dp-info-section"><h4> 住宿推荐</h4><div id="dpHotels"></div></div>
+      <div class="dp-info-section"><h4> 美食推荐</h4><div id="dpFoods"></div></div>
+    </div>
+  </div>
+</div>
+<script>
+const map=L.map('map',{zoomControl:false}).setView([32,112],6);
+L.control.zoom({position:'topright'}).addTo(map);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OSM & CartoDB',maxZoom:19,subdomains:'abcd'}).addTo(map);
+
+function mi(e,s){return L.divIcon({html:`<span style="font-size:${s||14}px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.6))">${e}</span>`,className:'mi',iconSize:[(s||14)+6,(s||14)+6],iconAnchor:[(s||14)/2+3,(s||14)/2+3]})}
+const iC=mi('🏙',14),iCh=mi('⚡',13),iSc=mi('🏔',13),iCa=mi('⛺',12),iSt=mi('⭐',14),iMu=mi('🏛',14),iHm=mi('🏠',15),iTp=mi('🛕',13),iFd=mi('🍜',13);
+
+const C_D1='#3b82f6',C_D2='#10b981',C_D3='#f59e0b',C_D4='#ef4444';
+
+const days=[
+  // ===== Day 1: 义乌→南昌→武汉 =====
+  {ph:'Day 1',pc:C_D1,d:'Day 1',t:'义乌 → 南昌 → 武汉',r:'650km · 约7h',dist:'650km',hl:'滕王阁 · 南昌拌粉 · 户部巷',
+   co:[[29.310,120.150],[29.0,118.5],[28.7,117.0],[28.682,115.858],[29.5,115.0],[30.2,114.5],[30.593,114.305]],
+   mk:[{p:[28.682,115.858],i:iMu,n:'南昌',d:'滕王阁 · 江南三大名楼'},{p:[30.593,114.305],i:iC,n:'武汉',d:'黄鹤楼 · 户部巷'}],
+   stops:[{name:'义乌出发',cat:'起点',coord:[29.310,120.150],hours:'7:00出发',desc:'加满油/充满电，检查车况，导航设好'},
+          {name:'滕王阁',cat:'古迹',coord:[28.682,115.858],hours:'8:00-17:30',desc:'江南三大名楼之一，"落霞与孤鹜齐飞"。门票50元，游览1-1.5h',guide:'小红书搜"滕王阁攻略"'},
+          {name:'南昌拌粉+瓦罐汤',cat:'美食',coord:[28.680,115.870],hours:'11:30-13:00',desc:'南昌特色！拌粉3-5元，瓦罐汤5-10元，便宜又好吃'},
+          {name:'户部巷',cat:'美食街',coord:[30.550,114.300],hours:'全天',desc:'武汉最出名的美食街，热干面、豆皮、面窝、鸭脖',guide:'小红书搜"户部巷美食攻略"'},
+          {name:'长江大桥夜景',cat:'景点',coord:[30.545,114.290],hours:'晚上',desc:'万里长江第一桥，夜景壮观，步行过桥免费'}],
+   hotels:[{name:'武汉光谷/江汉路酒店',detail:'¥200-400/晚'},{name:'⛺ 东湖绿道附近露营',detail:'免费，环境好'}],
+   foods:[{name:'户部巷',detail:'热干面、三鲜豆皮、面窝、精武鸭脖'},{name:'吉庆街',detail:'老通城豆皮、四季美汤包'}]},
+
+  // ===== Day 2: 武汉→十堰(武当山) =====
+  {ph:'Day 2',pc:C_D2,d:'Day 2',t:'武汉 → 十堰（武当山）',r:'450km · 约5h',dist:'450km',hl:'黄鹤楼 · 穿越大别山 · 武当山',
+   co:[[30.593,114.305],[30.8,113.5],[31.0,113.0],[31.5,112.5],[32.0,112.0],[32.5,111.5],[32.8,111.0],[33.0,110.8],[32.650,111.050]],
+   mk:[{p:[30.593,114.305],i:iMu,n:'武汉',d:'黄鹤楼'},{p:[32.650,111.050],i:iTp,n:'武当山',d:'道教圣地 · 世界遗产'}],
+   stops:[{name:'黄鹤楼',cat:'古迹',coord:[30.545,114.295],hours:'8:00-18:00',desc:'天下江山第一楼，门票70元。建议早上去，人少光线好',guide:'小红书搜"黄鹤楼拍照攻略"'},
+          {name:'热干面早餐',cat:'美食',coord:[30.550,114.300],hours:'7:00-9:00',desc:'蔡林记或街边小店，2-3元一碗，武汉人的灵魂早餐'},
+          {name:'大别山区高速',cat:'风景',coord:[31.5,112.5],hours:'沿途',desc:'G70福银高速穿越大别山西麓，山区高速桥隧相连，风景不错'},
+          {name:'武当山',cat:'世界遗产',coord:[32.650,111.050],hours:'7:00-17:30',desc:'道教圣地，世界文化遗产。门票130元+景区车100元。金顶、南岩宫、紫霄宫必去',guide:'小红书搜"武当山一日游攻略"'}],
+   hotels:[{name:'武当山脚下酒店',detail:'¥200-400/晚'},{name:'⛺ 武当山脚下露营',detail:'免费，空气好'}],
+   foods:[{name:'十堰三合汤',detail:'牛肉汤+饺子+黄酒，十堰特色'},{name:'武当山道家斋饭',detail:'紫霄宫素斋，清静养生'}]},
+
+  // ===== Day 3: 十堰→西安(穿越秦岭) =====
+  {ph:'Day 3',pc:C_D3,d:'Day 3',t:'十堰 → 西安（穿越秦岭）',r:'400km · 约5h',dist:'400km',hl:'秦岭隧道群 · 商洛 · 回民街',
+   co:[[32.650,111.050],[32.8,110.5],[33.0,110.0],[33.2,109.5],[33.5,109.0],[33.8,108.5],[34.0,108.2],[34.262,108.940]],
+   mk:[{p:[32.650,111.050],i:iTp,n:'武当山',d:'道教圣地'},{p:[34.262,108.940],i:iSt,n:'西安',d:'兵马俑 · 回民街 · 古城墙'}],
+   stops:[{name:'武当山金顶',cat:'景点',coord:[32.660,111.060],hours:'日出时分',desc:'如果住山上，早起看金顶日出，云海壮观'},
+          {name:'G70穿越秦岭',cat:'风景',coord:[33.5,109.0],hours:'沿途',desc:'秦岭是中国南北分界线！G70高速隧道群密集，最长隧道数公里。山区云雾缭绕，非常壮观',guide:'小红书搜"G70穿越秦岭自驾"'},
+          {name:'商洛/蓝田',cat:'小镇',coord:[33.8,108.5],hours:'-',desc:'秦岭腹地小镇，可以下高速吃个午饭，尝尝商洛核桃、蓝田饸饹'},
+          {name:'西安古城墙',cat:'世界遗产',coord:[34.260,108.940],hours:'8:00-22:00',desc:'中国现存最完整的古城墙，门票54元，可租自行车骑行一圈(13.7km)',guide:'小红书搜"西安城墙骑行攻略"'},
+          {name:'回民街',cat:'美食街',coord:[34.265,108.945],hours:'全天',desc:'西安最出名的美食街！肉夹馍、羊肉泡馍、biangbiang面、凉皮',guide:'小红书搜"回民街必吃攻略"'}],
+   hotels:[{name:'西安钟楼/大雁塔附近酒店',detail:'¥250-500/晚'},{name:' 曲江池附近露营',detail:'免费，环境好'}],
+   foods:[{name:'回民街',detail:'肉夹馍、羊肉泡馍、biangbiang面、凉皮、甑糕'},{name:'永兴坊',detail:'摔碗酒、子长煎饼、陕北美食'}]},
+
+  // ===== Day 4: 西安→兰州 =====
+  {ph:'Day 4',pc:C_D4,d:'Day 4',t:'西安 → 天水 → 兰州',r:'650km · 约7h',dist:'650km',hl:'麦积山石窟 · 关中平原 · 黄河铁桥',
+   co:[[34.262,108.940],[34.3,108.0],[34.3,107.0],[34.5,106.0],[34.580,105.720],[34.8,105.0],[35.0,104.5],[35.5,104.2],[36.058,103.823]],
+   mk:[{p:[34.580,105.720],i:iMu,n:'天水',d:'麦积山石窟'},{p:[36.058,103.823],i:iHm,n:'兰州',d:'黄河铁桥 · 牛肉面'}],
+   stops:[{name:'兵马俑',cat:'世界遗产',coord:[34.380,109.280],hours:'8:30-18:00',desc:'世界第八大奇迹！门票120元，建议请导游。如果时间紧可跳过，直奔兰州',guide:'小红书搜"兵马俑攻略2026"'},
+          {name:'G30连霍高速',cat:'风景',coord:[34.5,106.0],hours:'沿途',desc:'穿越关中平原→陇西高原，地貌从平原渐变黄土高原'},
+          {name:'麦积山石窟',cat:'世界遗产',coord:[34.580,105.720],hours:'8:30-17:30',desc:'中国四大石窟之一！悬崖上的佛像，门票80元。比莫高窟人少太多，非常值得',guide:'小红书搜"麦积山石窟攻略"'},
+          {name:'天水麻辣烫',cat:'美食',coord:[34.580,105.730],hours:'-',desc:'2024年爆火的天水麻辣烫！甘谷辣椒+手擀粉，下高速吃一碗再走'},
+          {name:'黄河铁桥(中山桥)',cat:'景点',coord:[36.065,103.817],hours:'全天',desc:'黄河第一桥，兰州地标。行程圆满结束！'},
+          {name:'正宁路夜市',cat:'美食街',coord:[36.055,103.820],hours:'18:00-24:00',desc:'牛奶鸡蛋醪糟、烤羊肉串、酿皮，兰州夜生活'}],
+   hotels:[{name:'兰州万达文华酒店',detail:'¥400-600/晚'},{name:'⛺ 黄河边床车露营',detail:'免费'}],
+   foods:[{name:'磨沟沿牛肉面',detail:'兰州牛肉面天花板，早上6点排队'},{name:'正宁路夜市',detail:'牛奶鸡蛋醪糟、烤羊肉串'},{name:'张掖路大众巷',detail:'马子禄牛肉面、酿皮'}]},
+];
+
+// 绘制路线
+const confLines=[];
+let curPhaseColor=C_D1;
+days.forEach((d,i)=>{
+  if(d.co.length<2)return;
+  if(d.pc)curPhaseColor=d.pc;
+  const c=curPhaseColor;
+  const l=L.polyline(d.co,{color:c,weight:3,opacity:.75}).addTo(map);
+  l.bindTooltip(d.d+' '+d.t,{sticky:true,className:'rt'});
+  confLines.push(l);
+});
+
+// 城市标记
+days.forEach(d=>{(d.mk||[]).forEach(m=>{
+  const mk=L.marker(m.p,{icon:m.i}).addTo(map);mk.bindPopup(`<div class="pp"><strong>${m.n}</strong><br>${m.d}</div>`);
+  L.marker(m.p,{icon:L.divIcon({html:`<span class="cl">${m.n}</span>`,className:'',iconSize:[60,14],iconAnchor:[-6,7]}),interactive:false}).addTo(map);
+})});
+
+// 构建侧边栏
+const daysEl=document.getElementById('days');let curPh='';
+days.forEach((d,i)=>{
+  if(d.ph&&d.ph!==curPh){curPh=d.ph;const sec=document.createElement('div');sec.className='sec';sec.innerHTML=`<h2><span class="d" style="background:${d.pc}"></span>${curPh}</h2>`;daysEl.appendChild(sec)}
+  const el=document.createElement('div');el.className='di';el.dataset.idx=i;
+  let h=`<div class="dl">${d.d}｜${d.t}</div><div class="dr">${d.dist||d.r}</div>`;
+  if(d.hl)h+=`<div class="dh">${d.hl}</div>`;
+  el.innerHTML=h;el.onclick=()=>selectDay(i);daysEl.lastChild.appendChild(el);
+});
+
+// 选择某天
+let selIdx=-1,currentStop=0;const hlLines=[],hlMks=[];
+function selectDay(idx){
+  hlLines.forEach(l=>map.removeLayer(l));hlLines.length=0;hlMks.forEach(m=>map.removeLayer(m));hlMks.length=0;
+  document.querySelectorAll('.di.act').forEach(e=>e.classList.remove('act'));
+  const d=days[idx];selIdx=idx;currentStop=0;
+  document.querySelectorAll('.di').forEach(c=>{if(parseInt(c.dataset.idx)===idx)c.classList.add('act')});
+  confLines.forEach(l=>l.setStyle({opacity:.1,weight:1.5}));
+  let dayColor='#60a5fa';for(let j=0;j<=idx;j++){if(days[j].pc)dayColor=days[j].pc}
+  if(d.co.length>=2){const hl=L.polyline(d.co,{color:dayColor,weight:4,opacity:.9}).addTo(map);hlLines.push(hl)}
+  if(d.stops&&d.stops.length>1){d.stops.forEach((s,i)=>{
+    const icon=L.divIcon({html:`<div style="display:flex;align-items:center;justify-content:center;background:#4A90D9;color:#fff;border-radius:50%;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3);font-weight:700;font-size:11px;width:22px;height:22px">${i+1}</div>`,className:'',iconSize:[22,22],iconAnchor:[11,11]});
+    const m=L.marker(s.coord,{icon,zIndexOffset:1000}).addTo(map);
+    m.bindPopup(`<div class="pp"><strong>${s.name}</strong><br>${s.cat}<br>${s.hours}<br>${s.desc}</div>`);
+    hlMks.push(m);
+  })}
+  if(d.co.length>=2)map.fitBounds(d.co,{padding:[80,80],maxZoom:10});
+  else if(d.co.length===1)map.flyTo(d.co[0],10,{duration:1});
+  document.getElementById('dpTitle').textContent=d.d+' · '+d.t;
+  const stopsEl=document.getElementById('dpStops');stopsEl.innerHTML='';
+  if(d.stops){d.stops.forEach((s,i)=>{
+    const card=document.createElement('div');card.className='dp-stop'+(i===currentStop?' active':'');
+    card.innerHTML=`<div class="sn">第${i+1}站</div><div class="sname">${s.name}</div><div class="scat">${s.cat}</div><div class="shours">🕐 ${s.hours}</div><div class="sdesc">${s.desc}</div>${s.guide?`<div class="sguide" onclick="window.open('https://www.xiaohongshu.com/search_result?keyword=${encodeURIComponent(s.name+'攻略')}','_blank')"> 小红书攻略</div>`:''}`;
+    card.onclick=()=>{currentStop=i;updateStopHighlight();map.flyTo(s.coord,13,{duration:.8})};
+    stopsEl.appendChild(card);
+  })}
+  const hotelsEl=document.getElementById('dpHotels');hotelsEl.innerHTML='';
+  if(d.hotels){d.hotels.forEach(h=>{const div=document.createElement('div');div.className='dp-info-item';div.innerHTML=`<div class="iname">${h.name}</div><div class="idetail">${h.detail}</div>`;hotelsEl.appendChild(div)})}
+  const foodsEl=document.getElementById('dpFoods');foodsEl.innerHTML='';
+  if(d.foods){d.foods.forEach(f=>{const div=document.createElement('div');div.className='dp-info-item';div.innerHTML=`<div class="iname">${f.name}</div><div class="idetail">${f.detail}</div>`;foodsEl.appendChild(div)})}
+  document.getElementById('detailPanel').classList.add('show');
+  document.getElementById('resetBtn').style.display='block';
+  document.getElementById('ovTxt').textContent=d.d+' · '+d.t;
+}
+function updateStopHighlight(){document.querySelectorAll('.dp-stop').forEach((c,i)=>{c.classList.toggle('active',i===currentStop)})}
+function prevStop(){if(currentStop>0){currentStop--;updateStopHighlight();map.flyTo(days[selIdx].stops[currentStop].coord,13,{duration:.8})}}
+function nextStop(){if(days[selIdx].stops&&currentStop<days[selIdx].stops.length-1){currentStop++;updateStopHighlight();map.flyTo(days[selIdx].stops[currentStop].coord,13,{duration:.8})}}
+function resetView(){selIdx=-1;hlLines.forEach(l=>map.removeLayer(l));hlLines.length=0;hlMks.forEach(m=>map.removeLayer(m));hlMks.length=0;confLines.forEach(l=>l.setStyle({opacity:.75,weight:3}));document.querySelectorAll('.di.act').forEach(e=>e.classList.remove('act'));map.flyTo([32,112],6,{duration:1});document.getElementById('detailPanel').classList.remove('show');document.getElementById('resetBtn').style.display='none';document.getElementById('ovTxt').textContent='全程总览 · 点击日期查看详情'}
+map.fitBounds(days.flatMap(d=>d.co),{padding:[25,25]});
+const sty=document.createElement('style');sty.textContent='.rt{background:rgba(10,10,26,.92)!important;border:1px solid #333!important;color:#fff!important;font-size:10px!important;border-radius:4px!important;padding:2px 7px!important}';document.head.appendChild(sty);
+</script>
+</body>
+</html>
