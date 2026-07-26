@@ -58,10 +58,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 <div id="sidebar">
   <div class="hdr">
     <h1>义乌 → 兰州 4天自驾</h1>
-    <p>约2,050km · 点击日期查看当天详细路线</p>
+    <p>约2,050km · 5天 · 点击日期查看当天详细路线</p>
     <div class="sts">
       <div class="st"><div class="n">~2,050</div><div class="l">总里程km</div></div>
-      <div class="st"><div class="n">4</div><div class="l">总天数</div></div>
+      <div class="st"><div class="n">5</div><div class="l">总天数</div></div>
       <div class="st"><div class="n">一人</div><div class="l">单车自驾</div></div>
     </div>
   </div>
@@ -72,7 +72,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
     <div class="li"><div class="ll" style="background:#3b82f6"></div>Day 1 义乌→南昌→武汉</div>
     <div class="li"><div class="ll" style="background:#10b981"></div>Day 2 武汉→十堰(武当山)</div>
     <div class="li"><div class="ll" style="background:#f59e0b"></div>Day 3 十堰→西安(穿越秦岭)</div>
-    <div class="li"><div class="ll" style="background:#ef4444"></div>Day 4 西安→兰州</div>
+    <div class="li"><div class="ll" style="background:#ef4444"></div>Day 4 西安深度游</div>
+    <div class="li"><div class="ll" style="background:#ef4444;opacity:.7"></div>Day 5 西安→兰州</div>
     <div class="li"><div class="ld" style="background:#22c55e"></div>⚡ 充电站</div>
     <div class="li"><div class="ld" style="background:#a855f7"></div> 景点/古迹</div>
     <div class="li"><div class="ld" style="background:#eab308"></div> 美食</div>
@@ -91,9 +92,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
   </div>
 </div>
 <script>
-const map=L.map('map',{zoomControl:false}).setView([32,112],6);
+const map=L.map('map',{zoomControl:false}).setView([33,110],6);
 L.control.zoom({position:'topright'}).addTo(map);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OSM & CartoDB',maxZoom:19,subdomains:'abcd'}).addTo(map);
+L.tileLayer('https://webst0{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',{attribution:'&copy; 高德地图',maxZoom:18,subdomains:'1234'}).addTo(map);
 
 function mi(e,s){return L.divIcon({html:`<span style="font-size:${s||14}px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.6))">${e}</span>`,className:'mi',iconSize:[(s||14)+6,(s||14)+6],iconAnchor:[(s||14)/2+3,(s||14)/2+3]})}
 const iC=mi('🏙',14),iCh=mi('⚡',13),iSc=mi('🏔',13),iCa=mi('⛺',12),iSt=mi('⭐',14),iMu=mi('🏛',14),iHm=mi('🏠',15),iTp=mi('🛕',13),iFd=mi('🍜',13);
@@ -136,8 +137,20 @@ const days=[
    hotels:[{name:'西安钟楼/大雁塔附近酒店',detail:'¥250-500/晚'},{name:' 曲江池附近露营',detail:'免费，环境好'}],
    foods:[{name:'回民街',detail:'肉夹馍、羊肉泡馍、biangbiang面、凉皮、甑糕'},{name:'永兴坊',detail:'摔碗酒、子长煎饼、陕北美食'}]},
 
-  // ===== Day 4: 西安→兰州 =====
-  {ph:'Day 4',pc:C_D4,d:'Day 4',t:'西安 → 天水 → 兰州',r:'650km · 约7h',dist:'650km',hl:'麦积山石窟 · 关中平原 · 黄河铁桥',
+
+  // ===== Day 4: 西安深度游 =====
+  {ph:'Day 4',pc:'#ef4444',d:'Day 4',t:'西安深度游',r:'市内50km',dist:'50km',hl:'兵马俑 · 古城墙 · 回民街',
+   co:[[34.262,108.940],[34.380,109.280],[34.262,108.940],[34.260,108.940],[34.265,108.945]],
+   mk:[{p:[34.380,109.280],i:iMu,n:'兵马俑',d:'世界第八大奇迹'},{p:[34.262,108.940],i:iSt,n:'西安',d:'古城墙 · 回民街'}],
+   stops:[{name:'兵马俑',cat:'世界遗产',coord:[34.380,109.280],hours:'8:30-18:00',desc:'世界第八大奇迹！门票120元，建议请导游或租讲解器。一号坑最壮观，二号坑兵种最全，三号坑是指挥部',guide:'小红书搜"兵马俑攻略2026"'},
+          {name:'biangbiang面午餐',cat:'美食',coord:[34.270,108.950],hours:'12:00-14:00',desc:'回到市区吃一碗正宗biangbiang面，又宽又长又劲道'},
+          {name:'西安古城墙',cat:'世界遗产',coord:[34.260,108.940],hours:'8:00-22:00',desc:'中国现存最完整古城墙，门票54元，租自行车骑行一圈13.7km约1.5h，傍晚骑行看日落最美',guide:'小红书搜"西安城墙骑行攻略"'},
+          {name:'钟鼓楼',cat:'古迹',coord:[34.262,108.942],hours:'8:30-21:30',desc:'西安地标，钟楼+鼓楼联票50元，晚上亮灯很美'},
+          {name:'回民街',cat:'美食街',coord:[34.265,108.945],hours:'全天',desc:'肉夹馍、羊肉泡馍、凉皮、甑糕、胡辣汤、酸梅汤',guide:'小红书搜"回民街必吃攻略"'}],
+   hotels:[{name:'西安钟楼/大雁塔附近酒店',detail:'¥250-500/晚'},{name:'⛺ 曲江池附近露营',detail:'免费，环境好'}],
+   foods:[{name:'回民街',detail:'肉夹馍(子午路张记)、羊肉泡馍(老孙家)、biangbiang面'},{name:'永兴坊',detail:'摔碗酒、子长煎饼、陕北美食'},{name:'长安大排档',detail:'葫芦鸡、毛笔酥，网红陕菜'}]},
+  // ===== Day 5: 西安→兰州 =====
+  {ph:'Day 5',pc:C_D4,d:'Day 5',t:'西安 → 天水 → 兰州',r:'650km · 约7h',dist:'650km',hl:'麦积山石窟 · 关中平原 · 黄河铁桥',
    co:[[34.262,108.940],[34.3,108.0],[34.3,107.0],[34.5,106.0],[34.580,105.720],[34.8,105.0],[35.0,104.5],[35.5,104.2],[36.058,103.823]],
    mk:[{p:[34.580,105.720],i:iMu,n:'天水',d:'麦积山石窟'},{p:[36.058,103.823],i:iHm,n:'兰州',d:'黄河铁桥 · 牛肉面'}],
    stops:[{name:'兵马俑',cat:'世界遗产',coord:[34.380,109.280],hours:'8:30-18:00',desc:'世界第八大奇迹！门票120元，建议请导游。如果时间紧可跳过，直奔兰州',guide:'小红书搜"兵马俑攻略2026"'},
@@ -215,7 +228,7 @@ function selectDay(idx){
 function updateStopHighlight(){document.querySelectorAll('.dp-stop').forEach((c,i)=>{c.classList.toggle('active',i===currentStop)})}
 function prevStop(){if(currentStop>0){currentStop--;updateStopHighlight();map.flyTo(days[selIdx].stops[currentStop].coord,13,{duration:.8})}}
 function nextStop(){if(days[selIdx].stops&&currentStop<days[selIdx].stops.length-1){currentStop++;updateStopHighlight();map.flyTo(days[selIdx].stops[currentStop].coord,13,{duration:.8})}}
-function resetView(){selIdx=-1;hlLines.forEach(l=>map.removeLayer(l));hlLines.length=0;hlMks.forEach(m=>map.removeLayer(m));hlMks.length=0;confLines.forEach(l=>l.setStyle({opacity:.75,weight:3}));document.querySelectorAll('.di.act').forEach(e=>e.classList.remove('act'));map.flyTo([32,112],6,{duration:1});document.getElementById('detailPanel').classList.remove('show');document.getElementById('resetBtn').style.display='none';document.getElementById('ovTxt').textContent='全程总览 · 点击日期查看详情'}
+function resetView(){selIdx=-1;hlLines.forEach(l=>map.removeLayer(l));hlLines.length=0;hlMks.forEach(m=>map.removeLayer(m));hlMks.length=0;confLines.forEach(l=>l.setStyle({opacity:.75,weight:3}));document.querySelectorAll('.di.act').forEach(e=>e.classList.remove('act'));map.flyTo([33,110],6,{duration:1});document.getElementById('detailPanel').classList.remove('show');document.getElementById('resetBtn').style.display='none';document.getElementById('ovTxt').textContent='全程总览 · 点击日期查看详情'}
 map.fitBounds(days.flatMap(d=>d.co),{padding:[25,25]});
 const sty=document.createElement('style');sty.textContent='.rt{background:rgba(10,10,26,.92)!important;border:1px solid #333!important;color:#fff!important;font-size:10px!important;border-radius:4px!important;padding:2px 7px!important}';document.head.appendChild(sty);
 </script>
