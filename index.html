@@ -94,6 +94,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 <script>
 const map=L.map('map',{zoomControl:false}).setView([33,110],6);
 L.control.zoom({position:'topright'}).addTo(map);
+// 创建自定义pane确保路线在瓦片之上
+map.createPane('routePane');map.getPane('routePane').style.zIndex=650;
 L.tileLayer('https://webst0{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',{attribution:'&copy; 高德地图',maxZoom:18,subdomains:'1234'}).addTo(map);
 L.tileLayer('https://webst0{s}.is.autonavi.com/appmaptile?style=8&x={x}&y={y}&z={z}',{attribution:'&copy; 高德地图',maxZoom:18,subdomains:'1234',opacity:0.5}).addTo(map);
 
@@ -168,14 +170,14 @@ const days=[
    foods:[{name:'磨沟沿牛肉面',detail:'兰州牛肉面天花板，早上6点排队'},{name:'正宁路夜市',detail:'牛奶鸡蛋醪糟、烤羊肉串'},{name:'张掖路大众巷',detail:'马子禄牛肉面、酿皮'}]},
 ];
 
-// 绘制路线
+// 绘制路线（使用自定义pane确保在瓦片之上）
 const confLines=[];
 let curPhaseColor=C_D1;
 days.forEach((d,i)=>{
   if(d.co.length<2)return;
   if(d.pc)curPhaseColor=d.pc;
   const c=curPhaseColor;
-  const l=L.polyline(d.co,{color:c,weight:3,opacity:.75}).addTo(map);
+  const l=L.polyline(d.co,{color:c,weight:4,opacity:.85,pane:'routePane'}).addTo(map);
   l.bindTooltip(d.d+' '+d.t,{sticky:true,className:'rt'});
   confLines.push(l);
 });
@@ -205,7 +207,7 @@ function selectDay(idx){
   document.querySelectorAll('.di').forEach(c=>{if(parseInt(c.dataset.idx)===idx)c.classList.add('act')});
   confLines.forEach(l=>l.setStyle({opacity:.1,weight:1.5}));
   let dayColor='#60a5fa';for(let j=0;j<=idx;j++){if(days[j].pc)dayColor=days[j].pc}
-  if(d.co.length>=2){const hl=L.polyline(d.co,{color:dayColor,weight:4,opacity:.9}).addTo(map);hlLines.push(hl)}
+  if(d.co.length>=2){const hl=L.polyline(d.co,{color:dayColor,weight:4,opacity:.9,pane:'routePane'}).addTo(map);hlLines.push(hl)}
   if(d.stops&&d.stops.length>1){d.stops.forEach((s,i)=>{
     const icon=L.divIcon({html:`<div style="display:flex;align-items:center;justify-content:center;background:#4A90D9;color:#fff;border-radius:50%;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3);font-weight:700;font-size:11px;width:22px;height:22px">${i+1}</div>`,className:'',iconSize:[22,22],iconAnchor:[11,11]});
     const m=L.marker(s.coord,{icon,zIndexOffset:1000}).addTo(map);
